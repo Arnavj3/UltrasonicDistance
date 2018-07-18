@@ -1,9 +1,11 @@
 package com.example.arnavjain99.testapp;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
@@ -12,7 +14,14 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+
 public class MainActivity extends AppCompatActivity {
+
+    ArrayList<Model> modelArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,11 +34,15 @@ public class MainActivity extends AppCompatActivity {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
 
-        database.getReference("tempdata").addChildEventListener(new ChildEventListener() {
+        Date today = new Date();
+        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        String dateToStr = format.format(today);
+
+
+        database.getReference(dateToStr).addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(@NonNull DataSnapshot dataSnapshot, @Nullable String s) {
                 tempData.setText(String.format("%.2f", dataSnapshot.child("Distance").getValue()));
-
             }
 
             @Override
@@ -53,6 +66,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+    }
+    //Data Analytics
 
+    public void goToAnalytics(View view) {
+        startActivity(new Intent(MainActivity.this, ListActivity.class));
     }
 }
